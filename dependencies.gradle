@@ -1,0 +1,9 @@
+ext {
+    libs = [
+        test  : [
+            junitApi    : 'org.junit.jupiter:junit-jupiter-api:5.3.1',
+            junitEngine : 'org.junit.jupiter:junit-jupiter-engine:5.3.1',
+            assertj     : 'org.assertj:assertj-core:3.11.1'
+        ]
+    ]
+}

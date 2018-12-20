@@ -1,0 +1,1 @@
+Video store example from chapter 1 of Refactoring by Martin Fowler

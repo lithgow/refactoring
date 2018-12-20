@@ -1,0 +1,20 @@
+group = "org.example.refactoring"
+
+defaultTasks 'clean', 'build'
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+apply from: "$rootDir/dependencies.gradle"
+dependencies {
+    testImplementation libs.test.junitApi,
+            libs.test.assertj
+
+    testRuntimeOnly libs.test.junitEngine
+}
+
+test {
+    useJUnitPlatform()
+}
