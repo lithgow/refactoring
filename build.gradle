@@ -10,7 +10,9 @@ apply plugin: 'java'
 apply from: "$rootDir/dependencies.gradle"
 dependencies {
     testImplementation libs.test.junitApi,
-            libs.test.assertj
+            libs.test.junitParams,
+            libs.test.assertj,
+            libs.test.commonsLang
 
     testRuntimeOnly libs.test.junitEngine
 }
