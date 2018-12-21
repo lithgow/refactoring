@@ -117,15 +117,15 @@ class CustomerTest {
         assertThat(frequentRenterPoints()).isEqualTo(expectedPoints);
     }
 
-    @DisplayName("A customer with no rentals has an empty statement")
+    @DisplayName("A customer with no rentals has an empty text statement")
     @Test
-    void noRentals() {
-        assertThat(customerStatement()).isEqualTo(emptyStatement());
+    void textStatementWithNoRows() {
+        assertThat(customerTextStatement()).isEqualTo(emptyTextStatement());
     }
 
-    @DisplayName("A statement with a single row is formatted correctly")
+    @DisplayName("A text statement with a single row is formatted correctly")
     @Test
-    void statementWithSingleRow() {
+    void textStatementWithSingleRow() {
         customerRents(REGULAR_MOVIE).forPeriodOf(ONE_DAY);
 
         String expectedStatement = expectedStatement()
@@ -134,12 +134,12 @@ class CustomerTest {
                 .withFrequentRenterPoints(1)
                 .asText();
 
-        assertThat(customerStatement()).isEqualTo(expectedStatement);
+        assertThat(customerTextStatement()).isEqualTo(expectedStatement);
     }
 
-    @DisplayName("A statement with multiple rows is formatted correctly")
+    @DisplayName("A text statement with multiple rows is formatted correctly")
     @Test
-    void statementWithMultipleRows() {
+    void textStatementWithMultipleRows() {
         customerRents(REGULAR_MOVIE).forPeriodOf(ONE_DAY);
         customerRents(NEW_RELEASE_MOVIE).forPeriodOf(ONE_DAY);
         customerRents(CHILDRENS_MOVIE).forPeriodOf(ONE_DAY);
@@ -152,7 +152,45 @@ class CustomerTest {
                 .withFrequentRenterPoints(3)
                 .asText();
 
-        assertThat(customerStatement()).isEqualTo(expectedStatement);
+        assertThat(customerTextStatement()).isEqualTo(expectedStatement);
+    }
+
+    @DisplayName("A customer with no rentals has an empty html statement")
+    @Test
+    void htmlStatementWithNoRows() {
+        assertThat(customerHtmlStatement()).isEqualTo(emptyHtmlStatement());
+    }
+
+    @DisplayName("An html statement with a single row is formatted correctly")
+    @Test
+    void htmlStatementWithSingleRow() {
+        customerRents(REGULAR_MOVIE).forPeriodOf(ONE_DAY);
+
+        String expectedStatement = expectedStatement()
+                .withRow(REGULAR_MOVIE, 2.0)
+                .withAmountOwed(2.0)
+                .withFrequentRenterPoints(1)
+                .asHtml();
+
+        assertThat(customerHtmlStatement()).isEqualTo(expectedStatement);
+    }
+
+    @DisplayName("An html statement with multiple rows is formatted correctly")
+    @Test
+    void htmlStatementWithMultipleRows() {
+        customerRents(REGULAR_MOVIE).forPeriodOf(ONE_DAY);
+        customerRents(NEW_RELEASE_MOVIE).forPeriodOf(ONE_DAY);
+        customerRents(CHILDRENS_MOVIE).forPeriodOf(ONE_DAY);
+
+        String expectedStatement = expectedStatement()
+                .withRow(REGULAR_MOVIE, 2.0)
+                .withRow(NEW_RELEASE_MOVIE, 3.0)
+                .withRow(CHILDRENS_MOVIE, 1.5)
+                .withAmountOwed(6.5)
+                .withFrequentRenterPoints(3)
+                .asHtml();
+
+        assertThat(customerHtmlStatement()).isEqualTo(expectedStatement);
     }
 
     private CustomerRental customerRents(Movie movie) {
@@ -174,23 +212,31 @@ class CustomerTest {
     }
 
     private double amountOwed() {
-        return amountOwedIn(customerStatement());
+        return amountOwedIn(customerTextStatement());
     }
 
     private double frequentRenterPoints() {
-        return frequentRenterPointsIn(customerStatement());
+        return frequentRenterPointsIn(customerTextStatement());
     }
 
-    private String customerStatement() {
+    private String customerTextStatement() {
         return customer.statement();
+    }
+
+    private String customerHtmlStatement() {
+        return customer.htmlStatement();
     }
 
     private ExpectedStatement expectedStatement() {
         return ExpectedStatement.forCustomer(customer);
     }
 
-    private String emptyStatement() {
+    private String emptyTextStatement() {
         return ExpectedStatement.forCustomer(customer).asText();
+    }
+
+    private String emptyHtmlStatement() {
+        return ExpectedStatement.forCustomer(customer).asHtml();
     }
 
     private static class ExpectedStatement {
@@ -229,6 +275,16 @@ class CustomerTest {
             }
             result += "Amount owed is " + amountOwed + "\n";
             result += "You earned " + frequentRenterPoints + " frequent renter points";
+            return result;
+        }
+
+        String asHtml() {
+            String result = "<H1>Rentals for <EM>" + customer.getName() + "</EM></H1><P>\n";
+            for (ExpectedStatementRow row : rows) {
+                result += row.getTitle() + ": " + row.getAmount() + "<BR>\n";
+            }
+            result += "<P>You owe <EM>" + amountOwed + "</EM><P>\n";
+            result += "On this rental you earned <EM>" + frequentRenterPoints + "</EM> frequent renter points<P>";
             return result;
         }
 
