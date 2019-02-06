@@ -2,25 +2,24 @@ package org.example.refactoring;
 
 import java.util.Enumeration;
 
-class Statement {
-
-}
-
-class TextStatement extends Statement {
+abstract class Statement {
     public String value(Customer aCustomer) {
         Enumeration rentals = aCustomer.getRentals();
         String result = headerString(aCustomer);
         while (rentals.hasMoreElements()) {
             Rental each = (Rental) rentals.nextElement();
-
-            //show figures for this rental
             result += eachRentalString(each);
         }
-        //add footer lines
         result += footerString(aCustomer);
         return result;
     }
 
+    abstract String headerString(Customer aCustomer);
+    abstract String eachRentalString(Rental aRental);
+    abstract String footerString(Customer aCustomer);
+}
+
+class TextStatement extends Statement {
     String headerString(Customer aCustomer) {
         return "Rental Record for " + aCustomer.getName() + "\n";
     }
@@ -38,19 +37,6 @@ class TextStatement extends Statement {
 }
 
 class HtmlStatement extends Statement {
-    public String value(Customer aCustomer) {
-        Enumeration rentals = aCustomer.getRentals();
-        String result = headerString(aCustomer);
-        while (rentals.hasMoreElements()) {
-            Rental each = (Rental) rentals.nextElement();
-            //show figures for each rental
-            result += eachRentalString(each);
-        }
-        //add footer lines
-        result += footerString(aCustomer);
-        return result;
-    }
-
     String headerString(Customer aCustomer) {
         return "<H1>Rentals for <EM>" + aCustomer.getName() + "</EM></H1><P>\n";
     }
