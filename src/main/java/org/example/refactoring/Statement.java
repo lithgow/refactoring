@@ -14,8 +14,7 @@ class TextStatement extends Statement {
             Rental each = (Rental) rentals.nextElement();
 
             //show figures for this rental
-            result += "\t" + each.getMovie().getTitle()+ "\t" +
-                    String.valueOf(each.getCharge()) + "\n";
+            result += eachRentalString(each);
         }
         //add footer lines
         result += "Amount owed is " + String.valueOf(aCustomer.getTotalCharge()) + "\n";
@@ -27,6 +26,11 @@ class TextStatement extends Statement {
     String headerString(Customer aCustomer) {
         return "Rental Record for " + aCustomer.getName() + "\n";
     }
+
+    String eachRentalString(Rental aRental) {
+        return "\t" + aRental.getMovie().getTitle() + "\t" +
+                String.valueOf(aRental.getCharge()) + "\n";
+    }
 }
 
 class HtmlStatement extends Statement {
@@ -36,8 +40,7 @@ class HtmlStatement extends Statement {
         while (rentals.hasMoreElements()) {
             Rental each = (Rental) rentals.nextElement();
             //show figures for each rental
-            result += each.getMovie().getTitle()+ ": " +
-                    String.valueOf(each.getCharge()) + "<BR>\n";
+            result += eachRentalString(each);
         }
         //add footer lines
         result +=  "<P>You owe <EM>" + String.valueOf(aCustomer.getTotalCharge()) + "</EM><P>\n";
@@ -49,5 +52,10 @@ class HtmlStatement extends Statement {
 
     String headerString(Customer aCustomer) {
         return "<H1>Rentals for <EM>" + aCustomer.getName() + "</EM></H1><P>\n";
+    }
+
+    String eachRentalString(Rental aRental) {
+        return aRental.getMovie().getTitle() + ": " +
+                String.valueOf(aRental.getCharge()) + "<BR>\n";
     }
 }
