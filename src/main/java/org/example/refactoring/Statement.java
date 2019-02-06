@@ -17,9 +17,7 @@ class TextStatement extends Statement {
             result += eachRentalString(each);
         }
         //add footer lines
-        result += "Amount owed is " + String.valueOf(aCustomer.getTotalCharge()) + "\n";
-        result += "You earned " + String.valueOf(aCustomer.getTotalFrequentRenterPoints()) +
-                " frequent renter points";
+        result += footerString(aCustomer);
         return result;
     }
 
@@ -30,6 +28,12 @@ class TextStatement extends Statement {
     String eachRentalString(Rental aRental) {
         return "\t" + aRental.getMovie().getTitle() + "\t" +
                 String.valueOf(aRental.getCharge()) + "\n";
+    }
+
+    String footerString(Customer aCustomer) {
+        return "Amount owed is " + String.valueOf(aCustomer.getTotalCharge()) + "\n" +
+                "You earned " + String.valueOf(aCustomer.getTotalFrequentRenterPoints()) +
+                " frequent renter points";
     }
 }
 
@@ -43,10 +47,7 @@ class HtmlStatement extends Statement {
             result += eachRentalString(each);
         }
         //add footer lines
-        result +=  "<P>You owe <EM>" + String.valueOf(aCustomer.getTotalCharge()) + "</EM><P>\n";
-        result += "On this rental you earned <EM>" +
-                String.valueOf(aCustomer.getTotalFrequentRenterPoints()) +
-                "</EM> frequent renter points<P>";
+        result += footerString(aCustomer);
         return result;
     }
 
@@ -57,5 +58,12 @@ class HtmlStatement extends Statement {
     String eachRentalString(Rental aRental) {
         return aRental.getMovie().getTitle() + ": " +
                 String.valueOf(aRental.getCharge()) + "<BR>\n";
+    }
+
+    String footerString(Customer aCustomer) {
+        return "<P>You owe <EM>" + String.valueOf(aCustomer.getTotalCharge()) + "</EM><P>\n" +
+                "On this rental you earned <EM>" +
+                String.valueOf(aCustomer.getTotalFrequentRenterPoints()) +
+                "</EM> frequent renter points<P>";
     }
 }
